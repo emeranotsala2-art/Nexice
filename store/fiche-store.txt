@@ -1,0 +1,48 @@
+FICHE GOOGLE PLAY - NEXICE (a adapter)
+
+Nom (30 car. max) : NeXice - Commerce B2B
+Description courte (80 car. max) :
+Achetez, vendez et livrez entre professionnels, avec suivi en direct.
+
+Description complete :
+NeXice connecte acheteurs, grossistes, fournisseurs et livreurs sur une seule plateforme, pour un commerce plus simple et plus transparent.
+
+ACHETEURS
+- Parcourez le catalogue des fournisseurs et composez votre panier
+- Proposez votre prix et negociez directement avec le vendeur
+- Payez par Orange Money et recevez votre facture automatiquement
+- Suivez votre livraison en direct sur la carte
+
+VENDEURS ET FOURNISSEURS
+- Publiez vos produits et gerez votre stock
+- Recevez les commandes, acceptez ou contre-proposez un prix
+- Soyez notifie a chaque etape : commande, paiement, livraison
+
+LIVREURS
+- Consultez les missions disponibles et prenez-les en charge
+- Partagez votre position pendant la livraison
+
+CONFIANCE ET TRACABILITE
+- Profils professionnels valides par un administrateur
+- Historique infalsifiable de chaque commande, verifiable a tout moment
+- Rappels automatiques : offres en attente, paiements, stocks faibles
+- Badges de certification pour valoriser votre activite
+- Assistant IA pour vous aider dans vos negociations et votre gestion
+
+Mode leger pour un affichage allege.
+
+Categorie : Affaires (Business)   |   Tags : B2B, commerce, grossiste, livraison
+Contact : votre email + site web
+URL politique de confidentialite : https://api.votredomaine.com/api/legal/privacy
+URL suppression de compte      : https://api.votredomaine.com/api/legal/delete-account
+
+DATA SAFETY (formulaire Play Console) - coherent avec l'application :
+  Collecte : Adresse e-mail ; Nom (entreprise) ; Numero de telephone (facultatif) ; Localisation precise (livreurs, premier plan uniquement) ;
+             Informations de paiement = reference de transaction Orange Money saisie par l'utilisateur (pas de carte) ;
+             Historique d'achats/commandes ; Identifiants utilisateur ; Messages dans l'app (notifications) ; questions a l'assistant IA.
+  Partage avec des tiers : localisation et details de commande visibles des parties a la commande (fonction centrale, pas de publicite) ;
+             questions IA traitees par un fournisseur de service (Anthropic).
+  Chiffrement en transit : Oui (HTTPS).   Suppression des donnees : Oui (dans l'application + page web).
+  Publicite : Non.   Public cible : 18 ans et plus (pas d'application pour enfants).
+  Acces a l'application pour l'examen : fournir des comptes de test deja VALIDES (acheteur, vendeur, livreur) avec mot de passe.
+  Declaration d'autorisation de localisation : premier plan uniquement, suivi de livraison par le livreur.

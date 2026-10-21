@@ -1,0 +1,90 @@
+PUBLIER NEXICE SUR GOOGLE PLAY - GUIDE PAS A PAS
+=================================================
+Delai realiste : environ 3 a 4 semaines pour un premier lancement (voir etape 4).
+
+ETAPE 0 - POINTS BLOQUANTS A REGLER AVANT TOUT
+ A. Paiement des badges (RISQUE DE REFUS ELEVE)
+    Les badges Vert/Violet/Rose et l'acces illimite a l'assistant IA sont des fonctions numeriques vendues dans l'application,
+    payees par Orange Money. La politique Paiements de Google Play impose en principe Google Play Billing pour ce type d'achat
+    (les produits physiques et services rendus hors de l'application, comme les commandes B2B, ne sont pas concernes).
+    Lisez la politique "Paiements" de la Play Console AVANT de soumettre. Options :
+      1) vendre les badges via Google Play Billing (commission Google) ;
+      2) retirer l'achat de badge de l'application Play Store (le demander depuis un site web / l'administrateur) ET ne plus
+         conditionner des fonctions de l'application a ce paiement ;
+      3) demander conseil au support Play avant soumission si vous pensez qu'une exception s'applique.
+    Les commandes entre professionnels (marchandises physiques) payees par Orange Money sont, elles, autorisees.
+ B. Suppression de compte : FAIT (bouton Plus > Supprimer mon compte + page web + endpoint DELETE /api/auth/me).
+ C. Politique de confidentialite : FAITE (modele) a l'adresse /api/legal/privacy. Renseignez LEGAL_COMPANY et LEGAL_EMAIL dans .env
+    et faites relire le texte avant publication (ce n'est pas un avis juridique).
+ D. Cartes : le serveur public d'OpenStreetMap est reserve a un usage leger. En production, prenez un fournisseur de tuiles
+    et compilez avec --dart-define=TILE_URL=... --dart-define=TILE_ATTRIBUTION="..." (voir mobile/lib/tracking.dart).
+
+ETAPE 1 - METTRE LE BACKEND EN LIGNE (obligatoire : l'application ne peut pas utiliser localhost)
+ 1. Louer un serveur (VPS Linux, 2 Go de RAM minimum) et un nom de domaine ; creer un enregistrement DNS A (api.votredomaine.com -> IP).
+ 2. Installer Docker, copier le dossier backend/, creer .env a partir de .env.example :
+      JWT_SECRET long et aleatoire (64 caracteres), DB_PASS fort, ADMIN_PASSWORD fort (entre guillemets s'il contient #),
+      DB_SYNC=false, CORS_ORIGIN vide ou liste de domaines, ANTHROPIC_API_KEY si vous gardez l'assistant IA,
+      LEGAL_COMPANY et LEGAL_EMAIL.
+ 3. Remplacer le domaine dans backend/Caddyfile, puis :
+      docker compose -f docker-compose.prod.yml up -d --build
+    Caddy obtient le certificat HTTPS automatiquement. Les migrations s'appliquent au demarrage.
+ 4. Creer l'admin et les tarifs : docker compose -f docker-compose.prod.yml exec api node dist/seed.js
+    (n'utilisez PAS --demo en production).
+ 5. Verifier : https://api.votredomaine.com/api/health   et   /api/legal/privacy
+ 6. Sauvegardes : pg_dump quotidien (cron) copie hors du serveur ; tester une restauration. Pare-feu : seuls 22, 80 et 443 ouverts.
+    (Fichiers docker-compose.prod.yml et Caddyfile fournis, non testes dans cet environnement.)
+
+ETAPE 2 - PREPARER L'APPLICATION ANDROID
+ 1. Installer la derniere version stable de Flutter + Android Studio (SDK Android 36). Google Play exige que les nouvelles
+    applications ciblent Android 16 (API 36).
+ 2. Dans mobile/ :  flutter create . --project-name nexice --org cm.nexice     (genere android/ et ios/)
+ 3. Fixer l'identifiant d'application : "cm.nexice.app" dans android/app/build.gradle(.kts) (applicationId).
+    ATTENTION : il est DEFINITIF apres la premiere publication.
+ 4. Appliquer mobile/android-release/AndroidManifest.snippet.xml (permissions, nom) et build.gradle.kts.snippet (targetSdk 36, signature).
+ 5. Creer la cle de signature (a sauvegarder dans 2 endroits : sa perte bloque les mises a jour) :
+      keytool -genkey -v -keystore nexice-upload.jks -keyalg RSA -keysize 2048 -validity 10000 -alias nexice
+    puis copier key.properties.example en android/key.properties et le remplir. Ne jamais versionner ces fichiers.
+    (Activez aussi "Play App Signing" dans la Play Console : Google garde la cle finale, vous gardez la cle d'envoi.)
+ 6. Icone et nom : ajouter flutter_launcher_icons (icone 1024x1024) ; android:label="NeXice".
+ 7. Version : pubspec.yaml "version: 2.0.0+2" (le nombre apres + est le versionCode, a augmenter a chaque envoi).
+ 8. Tester sur un vrai telephone en mode release AVANT d'envoyer :
+      flutter run --release --dart-define=API_URL=https://api.votredomaine.com
+ 9. Generer le bundle :
+      flutter build appbundle --release --dart-define=API_URL=https://api.votredomaine.com
+    Fichier : build/app/outputs/bundle/release/app-release.aab
+ Note : le projet Flutter fourni n'a pas ete compile ici ; prevoir des corrections de compilation au premier build.
+
+ETAPE 3 - COMPTE DEVELOPPEUR GOOGLE PLAY
+ - Inscription sur play.google.com/console : frais uniques (25 USD au dernier tarif connu, a verifier), verification d'identite.
+ - Compte PERSONNEL : test ferme obligatoire (etape 4). Compte ORGANISATION : exempte de cette exigence mais exige des
+   documents d'entreprise (numero D-U-N-S, verification souvent plus longue). Choisissez selon votre situation.
+
+ETAPE 4 - TEST FERME (compte personnel cree apres le 13 novembre 2023)
+ Google exige un test ferme avec au moins 12 testeurs inscrits en continu pendant 14 jours avant de demander l'acces a la production.
+ 1. Play Console > Creer une application (langue FR, application, gratuite).
+ 2. Tests > Test ferme > creer une version, envoyer le .aab, ajouter les adresses Gmail des 12+ testeurs, leur envoyer le lien d'inscription.
+ 3. Rappeler aux testeurs de rester inscrits 14 jours sans interruption et d'ouvrir l'application.
+ 4. Au bout de 14 jours : "Demander l'acces a la production" (questionnaire sur les retours recus) puis examen par Google.
+ Pendant ce temps : remplir la fiche (etape 5), corriger les bugs remontes (nouvelle version = versionCode +1).
+
+ETAPE 5 - FICHE ET DECLARATIONS (voir store/fiche-store.txt)
+ - Textes, categorie Affaires, captures d'ecran telephone (minimum 2, idealement 4-8), icone 512x512, banniere 1024x500.
+ - Politique de confidentialite : URL /api/legal/privacy.   Suppression de compte : URL /api/legal/delete-account.
+ - Securite des donnees (Data safety) : remplir comme indique dans store/fiche-store.txt.
+ - Classification du contenu (questionnaire), public cible 18+, declaration d'absence de publicite.
+ - Acces a l'application : fournir a Google des comptes de test deja valides (acheteur, vendeur, livreur) avec mots de passe forts,
+   crees via l'inscription puis approuves par l'admin ; les supprimer apres l'examen. Ne pas utiliser les comptes demo en production.
+ - Autorisation de localisation : premier plan uniquement (suivi de livraison) ; pas de localisation en arriere-plan.
+ - Declaration de fonctionnalites financieres : l'application ne fournit pas de services financiers ; les paiements Orange Money
+   sont effectues en dehors de l'application (referencees seulement). A declarer honnetement.
+
+ETAPE 6 - PRODUCTION
+ Production > Creer une version > envoyer le .aab > deploiement. Premier examen : de quelques heures a plusieurs jours.
+ En cas de refus, Google indique le motif par email : corriger puis renvoyer.
+
+APRES LA PUBLICATION
+ - Chaque mise a jour : augmenter le versionCode, rebuilder, envoyer en test puis en production.
+ - Surveiller Android vitals (plantages) dans la Play Console ; prevoir un outil de suivi d'erreurs (Sentry/Firebase Crashlytics).
+ - Mettre a jour la cible API chaque annee (exigence Google) ; garder Flutter et les dependances a jour.
+ - Notifications hors application (Firebase Cloud Messaging) : prochaine amelioration recommandee.
+ - Verifier regulierement la conformite RGPD/loi locale sur les donnees personnelles avec un conseil juridique.

@@ -1,0 +1,32 @@
+// A integrer dans mobile/android/app/build.gradle.kts (cree par "flutter create .").
+// Adapter selon la version de Flutter : si votre fichier est build.gradle (Groovy), la logique est identique.
+
+import java.util.Properties
+import java.io.FileInputStream
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
+android {
+    defaultConfig {
+        applicationId = "cm.nexice.app"   // DEFINITIF apres publication : choisissez-le maintenant
+        targetSdk = 36                    // exige par Google Play pour les nouvelles applications
+        // versionCode / versionName viennent de pubspec.yaml (version: 2.0.0+2)
+    }
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+        }
+    }
+}

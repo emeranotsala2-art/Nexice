@@ -1,0 +1,5 @@
+# Copier en mobile/android/key.properties (NE JAMAIS versionner ni partager ce fichier)
+storePassword=MOT_DE_PASSE_KEYSTORE
+keyPassword=MOT_DE_PASSE_CLE
+keyAlias=nexice
+storeFile=C:/chemin/vers/nexice-upload.jks

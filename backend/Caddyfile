@@ -1,0 +1,4 @@
+# Remplacer par votre domaine (ex. api.nexice.cm)
+api.votredomaine.com {
+    reverse_proxy api:3000
+}

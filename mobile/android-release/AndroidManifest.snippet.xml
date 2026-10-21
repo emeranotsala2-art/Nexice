@@ -1,0 +1,6 @@
+<!-- A ajouter dans mobile/android/app/src/main/AndroidManifest.xml, avant <application> -->
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<!-- Pas de localisation en arriere-plan : ne PAS ajouter ACCESS_BACKGROUND_LOCATION (declaration Play supplementaire, risque de refus). -->
+<!-- Dans <application>, definir android:label="NeXice". En production l'API doit etre en HTTPS : ne pas activer usesCleartextTraffic. -->
