@@ -1,28 +1,28 @@
 name: Build Flutter APK
 on:
 push:
-branches: main 
+branches: main # Ou 'master' selon la branche par défaut de votre dépôt
 jobs:
 build:
 runs-on: ubuntu-latest
 steps:
-name: 
+name: 1. Cloner le dépôt
 uses: actions/checkout@v4
-name: 
+name: 2. Configurer Java (JDK)
 uses: actions/setup-java@v4
 with:
 distribution: 'zulu'
 java-version: '17'
-name:
+name: 3. Configurer le SDK Flutter
 uses: subosito/flutter-action@v2
 with:
 flutter-version: '3.47.7' # Utilise la version stable récente de Flutter
 channel: 'stable'
-name:
+name: 4. Installer les dépendances
 run: flutter pub get
-name: 
+name: 5. Compiler l'APK (en mode Release)
 run: flutter build apk --release
-name:
+name: 6. Sauvegarder l'APK généré
 uses: actions/upload-artifact@v4
 with:
 name: app-release
