@@ -23,7 +23,7 @@ class NexiceApp extends StatelessWidget {
             colorSchemeSeed: const Color(0xFF0E7C66),
             useMaterial3: true,
             visualDensity: light ? VisualDensity.compact : VisualDensity.standard,
-            cardTheme: const CardTheme(margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6)),
+            cardTheme: const CardThemeData(margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6)),
           ),
           home: Api.token == null ? const AuthScreen() : const HomeShell(),
         ),
