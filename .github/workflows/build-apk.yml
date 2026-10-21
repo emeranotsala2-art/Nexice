@@ -1,29 +1,38 @@
 name: Build Flutter APK
+
 on:
-push:
-branches: main 
+  push:
+    branches:
+      - main
+
 jobs:
-build:
-runs-on: ubuntu-latest
-steps:
-name: 
-uses: actions/checkout@v4
-name: 
-uses: actions/setup-java@v4
-with:
-distribution: 'zulu'
-java-version: '17'
-name:
-uses: subosito/flutter-action@v2
-with:
-flutter-version: '3.47.7' # Utilise la version stable récente de Flutter
-channel: 'stable'
-name:
-run: flutter pub get
-name: 
-run: flutter build apk --release
-name:
-uses: actions/upload-artifact@v4
-with:
-name: app-release
-path: build/app/outputs/flutter-apk/app-release.apk
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cloner le depot
+        uses: actions/checkout@v4
+
+      - name: Configurer Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Configurer Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
+      - name: Installer les dependances
+        run: cd mobile && flutter pub get
+
+      - name: Compiler l'APK
+        run: cd mobile && flutter build apk --release
+
+      - name: Sauvegarder l'APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
